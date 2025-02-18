@@ -8,6 +8,11 @@ import { Plus, Loader2 } from "lucide-react";
 const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 const API_KEY = "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";
 
+const enhancePromptForRealism = (basePrompt: string) => {
+  const realisticStyle = "ultra realistic, photographic, 8k, highly detailed, photorealistic, hyperrealistic, photography, real life, natural lighting";
+  return `${basePrompt}, ${realisticStyle}`;
+};
+
 export const ImageGenerator = () => {
   const [prompt, setPrompt] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -26,6 +31,7 @@ export const ImageGenerator = () => {
 
     setIsLoading(true);
     try {
+      const enhancedPrompt = enhancePromptForRealism(prompt);
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -33,7 +39,7 @@ export const ImageGenerator = () => {
           Authorization: `Bearer ${API_KEY}`,
         },
         body: JSON.stringify({ 
-          inputs: prompt,
+          inputs: enhancedPrompt,
           options: {
             wait_for_model: true
           }
