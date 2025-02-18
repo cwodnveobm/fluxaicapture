@@ -42,12 +42,20 @@ export const ImageGenerator = () => {
 
       if (!response.ok) {
         const error = await response.json();
+        if (response.status === 429) {
+          throw new Error("Rate limit reached. Please wait a minute before trying again.");
+        }
         throw new Error(error.error || "Failed to generate image");
       }
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       setImageUrl(url);
+      
+      toast({
+        title: "Success!",
+        description: "Image generated successfully.",
+      });
     } catch (error) {
       toast({
         title: "Error",
