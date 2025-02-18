@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Plus, Loader2 } from "lucide-react";
 
-const API_URL = "https://api-inference.huggingface.co/models/DamarJati/FLUX.1-RealismLora";
+const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 const API_KEY = "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";
 
 export const ImageGenerator = () => {
@@ -32,10 +32,18 @@ export const ImageGenerator = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
-        body: JSON.stringify({ inputs: prompt }),
+        body: JSON.stringify({ 
+          inputs: prompt,
+          options: {
+            wait_for_model: true
+          }
+        }),
       });
 
-      if (!response.ok) throw new Error("Failed to generate image");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to generate image");
+      }
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
@@ -43,7 +51,7 @@ export const ImageGenerator = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to generate image. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate image. Please try again.",
         variant: "destructive",
       });
     } finally {
