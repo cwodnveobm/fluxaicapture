@@ -77,7 +77,7 @@ export const ImageGenerator = () => {
     <div className="min-h-screen p-8 flex flex-col space-y-8">
       <header className="flex items-center space-x-4">
         <div className="h-8 w-8 rounded-full bg-primary" />
-        <h1 className="text-xl font-medium">AI Image Generation Tool</h1>
+        <h1 className="text-xl font-medium">ProofPixel AI</h1>
       </header>
 
       <div className="flex gap-8">
