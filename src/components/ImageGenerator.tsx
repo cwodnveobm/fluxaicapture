@@ -1,10 +1,9 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 
 const API_URL = "https://api-inference.huggingface.co/models/DamarJati/FLUX.1-RealismLora";
 const API_KEY = "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";
@@ -53,48 +52,67 @@ export const ImageGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center justify-center space-y-8">
-      <Card className="w-full max-w-2xl p-6 glass-panel">
-        <h1 className="text-3xl font-semibold text-center mb-6">AI Image Generation</h1>
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Enter your image description..."
+    <div className="min-h-screen p-8 flex flex-col space-y-8">
+      <header className="flex items-center space-x-4">
+        <div className="h-8 w-8 rounded-full bg-primary" />
+        <h1 className="text-xl font-medium">AI Image Generation Tool</h1>
+      </header>
+
+      <div className="flex gap-8">
+        <div className="flex-1 space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-lg font-medium">Prompt</h2>
+            <p className="text-sm text-muted-foreground">
+              What would you like to generate? Provide a detailed description.
+            </p>
+          </div>
+
+          <Card className="glass-panel">
+            <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1"
+              placeholder="Describe the image you want to generate in detail..."
+              className="w-full textarea-dark p-4"
               disabled={isLoading}
             />
+          </Card>
+
+          <div className="flex items-center gap-4">
             <Button
               onClick={generateImage}
               disabled={isLoading}
-              className="min-w-[120px]"
+              className="bg-primary hover:bg-primary/90"
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : (
-                "Generate"
+                <Plus className="h-4 w-4 mr-2" />
               )}
+              Generate Image
             </Button>
           </div>
+        </div>
 
-          {(isLoading || imageUrl) && (
-            <div className="mt-8 rounded-xl overflow-hidden bg-secondary/50 aspect-square">
-              {isLoading ? (
-                <div className="w-full h-full shimmer flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary/40" />
-                </div>
-              ) : (
-                <img
-                  src={imageUrl}
-                  alt="Generated"
-                  className="w-full h-full object-cover"
-                />
-              )}
+        <Card className="flex-1 aspect-square glass-panel overflow-hidden flex items-center justify-center">
+          {isLoading ? (
+            <div className="w-full h-full shimmer flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary/40" />
+            </div>
+          ) : imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="Generated"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-center p-8">
+              <p className="text-lg font-medium text-muted-foreground">
+                Describe the image you want to generate and click "Generate Image"
+              </p>
             </div>
           )}
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
